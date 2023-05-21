@@ -42,6 +42,21 @@ def foro():
     import Foro
     Foro.mostrarVentana()
 
+#Dinamismo de tabla
+def on_select(event):
+    item = table.focus()
+    materia= table.item(item, 'values')[1]
+    mycursor.execute("select id from materias where nombreMat='" + materia + "';")
+    resultado = mycursor.fetchall()
+    for res in resultado:
+        cargartbl2(res[0])
+
+
+def cargartbl2(id):
+    mycursor.execute("SELECT id,Unidad,Tema FROM informacion where materiaId=" + str(id) + ";")
+    rows = mycursor.fetchall()
+    borrarTbl2()
+    actualizarTbl2(rows)
 
 # iniciar a tkinter
 aplicacion = Tk()
@@ -119,38 +134,50 @@ for row in rows:
 # Agrega la tabla al Frame
 table.pack(side=LEFT, padx=5)
 
+# Enlazar el evento de selección de una fila
+table.bind('<<TreeviewSelect>>', on_select)
+
 
 # panel derecha -------------------------------------------------------------
-panel_derecho = Frame(aplicacion, bd=1, relief=FLAT, bg='#006633')
-panel_derecho.pack(side=RIGHT)
-# nombre del usuario conectado
-usuaroName = 'Jonathan Peña'
-lbl_nombre_usuario = Label(panel_derecho, text='Usuario: ' + usuaroName, bg='#006633')
-lbl_nombre_usuario.grid(row=0, column=0)
-# imagen foro
-img_foro = Image.open('foro.png')
-newSize = (200, 100)
-img_foro = img_foro.resize(newSize)
-imgF = ImageTk.PhotoImage(img_foro)
-lbl_img_foro = Label(panel_derecho, image=imgF)
-lbl_img_foro.grid(row=2, column=0, pady=30)
+# Crea la tabla
+table2 = Treeview(aplicacion, columns=("columna1"), show="headings")
+# Agregar columnas a la tabla
+table2["columns"] = ("id", "Unidad", "Tema")
+table2.column("#0", width=0, stretch=tk.NO)
+table2.column("id", anchor=tk.CENTER, width=75)
+table2.column("Unidad", anchor=tk.CENTER, width=75)
+table2.column("Tema", anchor=tk.CENTER, width=125)
 
-# mensaje
-mensaje = Label(panel_derecho, text='!Ingresa al foro estudiantil del Wikitsur \ny resuelve tus dudas o ayuda a los demas¡',
-bg='#006633')
-mensaje.grid(row=3, column=0)
+# Agregar encabezados de columna a la tabla
+table2.heading("#0", text="")
+table2.heading("id", text="id", anchor=tk.CENTER)
+table2.heading("Unidad", text="Unidad", anchor=tk.CENTER)
+table2.heading("Tema", text="mTema", anchor=tk.CENTER)
 
 
+# Agrega la tabla al Frame
+table2.pack(side=RIGHT, padx=5)
 
 
 def borrarTbl():
     table.delete(*table.get_children())
 
+
+def borrarTbl2():
+    table2.delete(*table2.get_children())
+
 def actualizarTbl(rows):
   for row in rows:
     table.insert("", tk.END, text="", values=row)
+# Enlazar el evento de selección de una fila
+table.bind('<<TreeviewSelect>>', on_select)
 
-aplicacion.iconify()
+
+def actualizarTbl2(rows):
+  for row in rows:
+    table2.insert("", tk.END, text="", values=row)
+
+aplicacion.mainloop()
 
 # Mostrar ventana
 def mostrarVentana():

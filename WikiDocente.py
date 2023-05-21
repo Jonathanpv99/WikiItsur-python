@@ -34,9 +34,10 @@ def buscar():
 def buscarId():
     materia = cmbMateria.get()
     mycursor.execute("select id from materias where nombreMat='" + materia + "';")
-    resultado = mycursor.fetchone()
-    id = resultado[0]
-    print(id)
+    resultado = mycursor.fetchall()
+    for res in resultado:
+        registrar(res[0])
+
 
 def registrar(id):
     unidad = cmbUnidad.get()
@@ -53,10 +54,6 @@ def login():
     import Login
     Login.mostrarVentana()
 
-def foro():
-    window.withdraw()
-    import Foro
-    Foro.mostrarVentana()
 
 # Crear ventana
 window = Tk()
@@ -111,7 +108,7 @@ info_area = scrolledtext.ScrolledText(window, width=40, height=10, font=("Arial"
 info_area.place(x=350, y=180)
 
 # Crear botón de Registro
-login_button = Button(window, text="Registrar", font=("Arial", 12), bg="#052E1A", fg="#ffffff", command=buscarId())
+login_button = Button(window, text="Registrar", font=("Arial", 12), bg="#052E1A", fg="#ffffff", command=buscarId)
 login_button.place(x=620, y=380)
 
 
@@ -123,17 +120,12 @@ welcome_label.place(x=400, y=385)
 panel_inferior = Frame(window, bd=1, relief=FLAT)
 panel_inferior.pack(side=BOTTOM)
 # boton ingresar
-boton_ingresar = Button(panel_inferior, text='Cerrar Sesion', width=26,
+boton_ingresar = Button(panel_inferior, text='Cerrar Sesion', width=16,
 fg='azure3', bg='#851818', font=('Arial', 12), command=login)
-boton_ingresar.grid(row=0, column=0, pady=15, padx=55)
+boton_ingresar.grid(row=0, column=0, pady=10, padx=325)
 
-# boton ir a foro
-boton_foro = Button(panel_inferior, text='Ir a foro', width=26,
-fg='azure3', bg='#052E1A', font=('Arial', 12), command=foro)
 
-boton_foro.grid(row=0, column=1, pady=15, padx=50)
-
-window.mainloop()
+window.iconify()
 # Mostrar ventana
 def mostrarVentana():
     window.deiconify()
