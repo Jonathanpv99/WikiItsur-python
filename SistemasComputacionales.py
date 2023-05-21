@@ -20,13 +20,13 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 mycursor.execute("USE tareatopicos")
-mycursor.execute("SELECT semestre,materia FROM preguntas;")
+mycursor.execute("SELECT semestre,nombreMat FROM materias;")
 rows = mycursor.fetchall()
 
 
 def buscar():
     semestre = lista_semestres.get()
-    mycursor.execute("SELECT semestre,materia FROM preguntas where semestre='"+semestre+"';")
+    mycursor.execute("SELECT semestre,nombreMat FROM materias where semestre='"+semestre+"';")
     rows = mycursor.fetchall()
     borrarTbl()
     actualizarTbl(rows)

@@ -59,7 +59,7 @@ panel_superior = Frame(window, bd=1, relief=FLAT,  bg='#052E1A')
 panel_superior.pack(side=TOP)
 #etiqueta bienvenida
 label_welcom = Label(panel_superior, text='Registro wikiItsur', fg='azure3',
-font=('Arial', 20), bg='#052E1A', width=20)
+font=('Arial', 20), bg='#052E1A', width=25)
 label_welcom.grid(row=0, column=1)
 # imagen usuario portal
 img_usuario_portal = Image.open("logoItsur.jpg")
