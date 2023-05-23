@@ -32,6 +32,7 @@ def buscar():
     actualizarTbl(rows)
 
 def loging():
+    mydb.close()
     aplicacion.withdraw()
     import Login
     Login.mostrarVentana()
@@ -49,6 +50,7 @@ def on_select(event):
     mycursor.execute("select id from materias where nombreMat='" + materia + "';")
     resultado = mycursor.fetchall()
     for res in resultado:
+        borrarTbl2()
         cargartbl2(res[0])
 
 
@@ -95,10 +97,10 @@ lbl_img_logo.grid(row=0, column=0)
 
 # label carrera
 label_semestre = Label(panel_superior, text='Selecciona el semestre: ', bg='#006633')
-label_semestre.grid(row=1, column=0,sticky=E)
+label_semestre.place(x=10, y=80)
 # lista de carreras
 lista_semestres = ttk.Combobox(panel_superior,values=["1", "2", "3", "4", "5", "6", "7", "8"])
-lista_semestres.grid(row=2, column=0, pady=2, sticky=E)
+lista_semestres.place(x=150, y=80)
 
 
 # boton buscar
@@ -186,6 +188,7 @@ def actualizarTbl2(rows):
     table2.insert("", tk.END, text="", values=row)
     # Enlazar el evento de selección de una fila
     table2.bind('<<TreeviewSelect>>', on_select2)
+
 
 aplicacion.iconify()
 

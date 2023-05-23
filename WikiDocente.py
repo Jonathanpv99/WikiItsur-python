@@ -50,14 +50,12 @@ def registrar(id):
     welcome_label.config(text="¡Registrado con exito " + "!")
 
 def login():
-    window.withdraw()
-    import Login
-    Login.mostrarVentana()
+    sys.exit()
 
 
 # Crear ventana
 window = Tk()
-window.title("Login")
+window.title("WikiDicente")
 window.geometry("800x500")
 
 # color de fondo

@@ -41,10 +41,9 @@ def buscarId():
 
 def registrar(id):
     unidad = cmbUnidad.get()
-    tema = tema_entry.get()
     info = info_area.get("1.0", tk.END)
-    sqlComando = "INSERT INTO informacion (unidad, tema, info, materiaId) VALUES (%s, %s, %s, %s)"
-    record1 = (unidad, tema, info, id)
+    sqlComando = "INSERT INTO preguntas(unidad, tema, pregunta, materiaId) VALUES (%s, %s, %s, %s)"
+    record1 = (unidad, info, id)
     mycursor.execute(sqlComando, record1)
     mydb.commit()
     welcome_label.config(text="¡Registrado con exito " + "!")
@@ -61,7 +60,7 @@ def wiki():
 
 # Crear ventana
 window = Tk()
-window.title("Login")
+window.title("Foro")
 window.geometry("800x500")
 
 # color de fondo
@@ -76,7 +75,7 @@ font=('Arial', 30), bg='#052E1A', width=30)
 
 etiqueta_titulo.grid(row=0, column=1)
 #etiqueta accion
-etiqueta_accion= Label(panel_superior, text='Consulta informacion en la wiki', fg='azure3',
+etiqueta_accion= Label(panel_superior, text='Escoje una materia y deja tus preguntas', fg='azure3',
 font=('Arial', 18), bg='#018243', width=60)
 
 etiqueta_accion.grid(row=1, column=1)
@@ -94,21 +93,17 @@ busc_button = Button(window, text="Buscar materias", font=("Arial", 11), bg="#05
 busc_button.place(x=570, y=90)
 
 pass_label = Label(window, text="Materia:", font=("Arial", 12), bg="#006633", fg="#ffffff")
-pass_label.place(x=30, y=150)
+pass_label.place(x=30, y=180)
 cmbMateria = ttk.Combobox(window)
-cmbMateria.place(x=110, y=150)
+cmbMateria.place(x=110, y=180)
 
 unidad_label = Label(window, text="Unidad:", font=("Arial", 12), bg="#006633", fg="#ffffff")
-unidad_label.place(x=30, y=200)
+unidad_label.place(x=30, y=230)
 cmbUnidad= ttk.Combobox(window,values=["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"])
-cmbUnidad.place(x=110, y=200)
-tema_label = Label(window, text="Tema:", font=("Arial", 12), bg="#006633", fg="#ffffff")
-tema_label.place(x=30, y=250)
-tema_entry = Entry(window, font=("Arial", 12))
-tema_entry.place(x=110, y=250)
-info_label = Label(window, text="Informacion:", font=("Arial", 12), bg="#006633", fg="#ffffff")
+cmbUnidad.place(x=110, y=230)
+info_label = Label(window, text="Tu pregunta:", font=("Arial", 12), bg="#006633", fg="#ffffff")
 info_label.place(x=350, y=150)
-info_area = scrolledtext.ScrolledText(window, width=40, height=10, font=("Arial", 10))
+info_area = scrolledtext.ScrolledText(window, width=40, height=5, font=("Arial", 10))
 info_area.place(x=350, y=180)
 
 # Crear botón de Registro
@@ -129,12 +124,12 @@ fg='azure3', bg='#851818', font=('Arial', 12), command=login)
 boton_ingresar.grid(row=0, column=0, pady=15, padx=55)
 
 # boton ir a foro
-boton_foro = Button(panel_inferior, text='Ir a foro', width=26,
+boton_foro = Button(panel_inferior, text='Regresar a Wiki', width=26,
 fg='azure3', bg='#052E1A', font=('Arial', 12), command=wiki)
 
 boton_foro.grid(row=0, column=1, pady=15, padx=50)
 
-window.iconify()
+window.mainloop()
 # Mostrar ventana
 def mostrarVentana():
     window.deiconify()

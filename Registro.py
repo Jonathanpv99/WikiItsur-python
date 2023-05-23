@@ -39,7 +39,7 @@ def registro(nomb,email,pass1,tipo):
     mycursor.execute(sqlComando, record1)
     mydb.commit()
     welcome_label.config(text="¡Registrado con exito "  + "!")
-
+    mydb.close()
 
 def login():
     window.withdraw()
@@ -48,7 +48,7 @@ def login():
 
 # Crear ventana
 window = Tk()
-window.title("Login")
+window.title("Registro")
 window.geometry("400x530")
 
 # color de fondo
@@ -61,13 +61,6 @@ panel_superior.pack(side=TOP)
 label_welcom = Label(panel_superior, text='Registro wikiItsur', fg='azure3',
 font=('Arial', 20), bg='#052E1A', width=25)
 label_welcom.grid(row=0, column=1)
-# imagen usuario portal
-img_usuario_portal = Image.open("logoItsur.jpg")
-newSize = (80, 60)
-img_usuario_portal = img_usuario_portal.resize(newSize)
-img = ImageTk.PhotoImage(img_usuario_portal)
-#lbl_img_logo = Label(panel_superior, image=img)
-#lbl_img_logo.grid(row=0, column=0)
 
 
 # Crear etiquetas de usuario

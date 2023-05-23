@@ -7,7 +7,8 @@ import PIL
 from PIL import Image, ImageTk
 from tkinter import ttk, scrolledtext
 
-
+def cerrar_proyecto():
+    sys.exit()
 # cerrar proyecto
 def cerrar():
     window.iconify()
@@ -32,7 +33,7 @@ def ActualizarInfo(id):
 
 # Crear ventana
 window = Tk()
-window.title("Login")
+window.title("Informacion")
 window.geometry("500x630")
 
 # color de fondo
@@ -67,3 +68,5 @@ def mostrarVentana(id):
     info_area.delete("1.0", tk.END)
     ActualizarInfo(id)
 
+# cerrar proyecto
+window.protocol("WM_DELETE_WINDOW", cerrar_proyecto)
