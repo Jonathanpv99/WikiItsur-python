@@ -43,7 +43,7 @@ def foro():
     Foro.mostrarVentana()
 
 #Dinamismo de tabla
-def on_select(event):
+def on_select():
     item = table.focus()
     materia= table.item(item, 'values')[1]
     mycursor.execute("select id from materias where nombreMat='" + materia + "';")
@@ -59,17 +59,18 @@ def cargartbl2(id):
     actualizarTbl2(rows)
 
 
-def on_select2(event):
+def on_select2():
+    aplicacion.withdraw()
     item = table2.focus()
     id= table2.item(item, 'values')[0]
     import Informacion
     Informacion.mostrarVentana(id)
-
+    table2.selection_remove(table2.focus())
 
 # iniciar a tkinter
 aplicacion = Tk()
 # tamaño de la ventala
-aplicacion.geometry('700x500+0+0')
+aplicacion.geometry('750x500')
 # evitar maximizar la ventana
 aplicacion.resizable(0, 0)
 # titulo de la ventana
@@ -81,16 +82,9 @@ panel_superior = Frame(aplicacion, bd=1, relief=FLAT,  bg='#052E1A')
 panel_superior.pack(side=TOP)
 # etiqueta de titulo
 etiqueta_titulo = Label(panel_superior, text='Sistemas C. wiki.', fg='azure3',
-font=('Arial', 48), bg='#052E1A', width=15)
+font=('Arial', 48), bg='#052E1A', width=20)
 
 etiqueta_titulo.grid(row=0, column=1)
-# imagen usuario portal
-img_usuario_portal = Image.open("logoItsur.jpg")
-newSize = (100, 70)
-img_usuario_portal = img_usuario_portal.resize(newSize)
-img = ImageTk.PhotoImage(img_usuario_portal)
-lbl_img_logo = Label(panel_superior, image=img)
-lbl_img_logo.grid(row=0, column=0)
 
 
 # label carrera
@@ -139,8 +133,10 @@ table.heading("materia", text="materia", anchor=tk.CENTER)
 # Agrega la tabla al Frame
 table.pack(side=LEFT, padx=5)
 
-# Enlazar el evento de selección de una fila
-table.bind('<<TreeviewSelect>>', on_select)
+# Crear botón de VerRespuestas
+login_button = Button(aplicacion, text="Ir", font=("Arial", 12), bg="#052E1A", fg="#ffffff", command=on_select)
+login_button.place(x=220, y=170)
+
 
 
 # panel derecha -------------------------------------------------------------
@@ -161,8 +157,11 @@ table2.heading("Tema", text="Tema", anchor=tk.CENTER)
 
 
 # Agrega la tabla al Frame
-table2.pack(side=RIGHT, padx=5)
-table2.bind('<<TreeviewSelect>>', on_select2)
+table2.place(x=300, y=165)
+
+# Crear botón de Responder
+login_button = Button(aplicacion, text="Leer", font=("Arial", 12), bg="#052E1A", fg="#ffffff", command=on_select2)
+login_button.place(x=590, y=165)
 
 def borrarTbl():
     table.delete(*table.get_children())
@@ -174,23 +173,19 @@ def borrarTbl2():
 def actualizarTbl(rows):
   for row in rows:
     table.insert("", tk.END, text="", values=row)
-# Enlazar el evento de selección de una fila
-table.bind('<<TreeviewSelect>>', on_select)
+
 
 
 def actualizarTbl2(rows):
   for row in rows:
     table2.insert("", tk.END, text="", values=row)
-    # Enlazar el evento de selección de una fila
-    table2.bind('<<TreeviewSelect>>', on_select2)
+
 
 def ActualizacionIni():
-    table.delete(*table.get_children())
-    mycursor.execute("SELECT id,unidad,pregunta FROM preguntas ;")
+    mycursor.execute("SELECT semestre,nombreMat FROM materias ;")
     rows = mycursor.fetchall()
     for row in rows:
-        table2.insert("", tk.END, text="", values=row)
-
+        table.insert("", tk.END, text="", values=row)
 
 
 aplicacion.iconify()
@@ -198,7 +193,8 @@ aplicacion.iconify()
 # Mostrar ventana
 def mostrarVentana():
     aplicacion.deiconify()
-
+    borrarTbl()
+    ActualizacionIni()
 
 # cerrar proyecto
 aplicacion.protocol("WM_DELETE_WINDOW", cerrar_proyecto)

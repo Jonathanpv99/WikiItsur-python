@@ -13,7 +13,7 @@ def cerrar_proyecto():
 def cerrar():
     window.withdraw()
     import SistemasComputacionales
-    SistemasComputacionales.ActualizacionIni()
+    SistemasComputacionales.mostrarVentana()
 
 mydb = mysql.connector.connect(
     host="localhost",
@@ -61,7 +61,7 @@ login_button.place(x=350, y=50)
 
 
 
-window.mainloop()
+window.iconify()
 
 # Mostrar ventana
 def mostrarVentana(id):
