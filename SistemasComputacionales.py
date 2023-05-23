@@ -58,6 +58,14 @@ def cargartbl2(id):
     borrarTbl2()
     actualizarTbl2(rows)
 
+
+def on_select2(event):
+    item = table2.focus()
+    id= table2.item(item, 'values')[0]
+    import Informacion
+    Informacion.mostrarVentana(id)
+
+
 # iniciar a tkinter
 aplicacion = Tk()
 # tamaño de la ventala
@@ -157,7 +165,7 @@ table2.heading("Tema", text="mTema", anchor=tk.CENTER)
 
 # Agrega la tabla al Frame
 table2.pack(side=RIGHT, padx=5)
-
+table2.bind('<<TreeviewSelect>>', on_select2)
 
 def borrarTbl():
     table.delete(*table.get_children())
@@ -176,8 +184,10 @@ table.bind('<<TreeviewSelect>>', on_select)
 def actualizarTbl2(rows):
   for row in rows:
     table2.insert("", tk.END, text="", values=row)
+    # Enlazar el evento de selección de una fila
+    table2.bind('<<TreeviewSelect>>', on_select2)
 
-aplicacion.mainloop()
+aplicacion.iconify()
 
 # Mostrar ventana
 def mostrarVentana():
