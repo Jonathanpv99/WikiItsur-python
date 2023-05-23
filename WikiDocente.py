@@ -50,7 +50,9 @@ def registrar(id):
     welcome_label.config(text="¡Registrado con exito " + "!")
 
 def login():
-    sys.exit()
+    window.withdraw()
+    import Login
+    Login.mostrarVentana()
 
 
 # Crear ventana

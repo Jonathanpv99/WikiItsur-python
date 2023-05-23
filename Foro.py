@@ -1,6 +1,8 @@
 import sys
 from tkinter import *
 import tkinter as tk
+from tkinter.ttk import Treeview
+
 import PIL
 import mysql.connector
 from PIL import Image, ImageTk
@@ -18,6 +20,14 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 mycursor.execute("USE tareatopicos")
+
+def buscarTbl():
+    borrarTbl()
+    semestre = lista_semestres.get()
+    mycursor.execute("SELECT  p.id, m.nombreMat, p.unidad,p.pregunta FROM preguntas p JOIN materias m ON p.materiaId = m.id  where m.semestre='"+semestre+"';")
+    rows = mycursor.fetchall()
+    for row in rows:
+        table2.insert("", tk.END, text="", values=row)
 
 def buscar():
     semestre = cmbSemestre.get()
@@ -42,11 +52,11 @@ def buscarId():
 def registrar(id):
     unidad = cmbUnidad.get()
     info = info_area.get("1.0", tk.END)
-    sqlComando = "INSERT INTO preguntas(unidad, tema, pregunta, materiaId) VALUES (%s, %s, %s, %s)"
+    sqlComando = "INSERT INTO preguntas(unidad, pregunta, materiaId) VALUES (%s, %s, %s)"
     record1 = (unidad, info, id)
     mycursor.execute(sqlComando, record1)
     mydb.commit()
-    welcome_label.config(text="¡Registrado con exito " + "!")
+    ActualizarTabla()
 
 def login():
     window.withdraw()
@@ -58,10 +68,36 @@ def wiki():
     import SistemasComputacionales
     SistemasComputacionales.mostrarVentana()
 
+
+def ActualizarTabla():
+    borrarTbl()
+    mycursor.execute("SELECT p.id, m.nombreMat, p.unidad,p.pregunta FROM preguntas p JOIN materias m ON p.materiaId = m.id ;")
+    rows = mycursor.fetchall()
+    for row in rows:
+        table2.insert("", tk.END, text="", values=row)
+
+
+def respuestas():
+    window.withdraw()
+    seleccion = table2.focus()  # Obtener el índice de la fila seleccionada
+    valores = table2.item(seleccion, 'values')  # Obtener los valores de la fila seleccionada
+    if valores:
+        id = valores[0]  # Obtener el valor de la primera columna (índice 0)
+        import VerRespuestas
+        VerRespuestas.mostrarVentana(id)
+
+def responder():
+    window.withdraw()
+    seleccion = table2.focus()  # Obtener el índice de la fila seleccionada
+    valores = table2.item(seleccion, 'values')  # Obtener los valores de la fila seleccionada
+    if valores:
+        id = valores[0]  # Obtener el valor de la primera columna (índice 0)
+        import Responder
+        Responder.mostrarVentana(id)
 # Crear ventana
 window = Tk()
 window.title("Foro")
-window.geometry("800x500")
+window.geometry("800x650")
 
 # color de fondo
 window.config(bg='#006633')
@@ -108,12 +144,49 @@ info_area.place(x=350, y=180)
 
 # Crear botón de Registro
 login_button = Button(window, text="Registrar", font=("Arial", 12), bg="#052E1A", fg="#ffffff", command=buscarId)
-login_button.place(x=620, y=380)
+login_button.place(x=620, y=280)
 
 
-# Crear etiqueta de mensaje de registro
-welcome_label = Label(window, text="", font=("Arial", 12), bg="#006633", fg="#ffffff")
-welcome_label.place(x=400, y=385)
+
+#----------------------------------------tabla y acciones wiki
+# label carrera
+label_semestre = Label(window, text='Buscar por \n semestre: ',font=("Arial", 12), bg='#006633',fg="#ffffff")
+label_semestre.place(x=25, y=285)
+# lista de carreras
+lista_semestres = ttk.Combobox(window,values=["1", "2", "3", "4", "5", "6", "7", "8"])
+lista_semestres.place(x=110, y=300)
+# boton buscar
+boton_buscar = Button(window, text='Buscar', width=15,
+fg='azure3', bg='#052E1A', font=('Arial', 12), command=buscarTbl)
+boton_buscar.place(x=260, y=295)
+
+# Crea la tabla
+table2 = Treeview(window, columns=("columna1"), show="headings")
+# Agregar columnas a la tabla
+table2["columns"] = ("id","materia", "Unidad", "pregunta")
+table2.column("#0", width=0, stretch=tk.NO)
+table2.column("id", anchor=tk.CENTER, width=75)
+table2.column("materia", anchor=tk.CENTER, width=125)
+table2.column("Unidad", anchor=tk.CENTER, width=75)
+table2.column("pregunta", anchor=tk.CENTER, width=125)
+
+# Agregar encabezados de columna a la tabla
+table2.heading("#0", text="")
+table2.heading("id", text="id", anchor=tk.CENTER)
+table2.heading("materia", text="materia", anchor=tk.CENTER)
+table2.heading("Unidad", text="Unidad", anchor=tk.CENTER)
+table2.heading("pregunta", text="pregunta", anchor=tk.CENTER)
+
+# Agrega la tabla al Frame
+table2.place(x=25, y=340)
+
+# Crear botón de VerRespuestas
+login_button = Button(window, text="Respuestas", font=("Arial", 12), bg="#052E1A", fg="#ffffff", command=respuestas)
+login_button.place(x=460, y=400)
+
+# Crear botón de Responder
+login_button = Button(window, text="Responder", font=("Arial", 12), bg="#052E1A", fg="#ffffff", command=responder)
+login_button.place(x=600, y=400)
 
 # panel inferior ------------------------------------------------------------
 panel_inferior = Frame(window, bd=1, relief=FLAT)
@@ -129,10 +202,15 @@ fg='azure3', bg='#052E1A', font=('Arial', 12), command=wiki)
 
 boton_foro.grid(row=0, column=1, pady=15, padx=50)
 
-window.mainloop()
+
+def borrarTbl():
+    table2.delete(*table2.get_children())
+
+window.iconify()
 # Mostrar ventana
 def mostrarVentana():
     window.deiconify()
+    ActualizarTabla()
 
 # cerrar proyecto
 window.protocol("WM_DELETE_WINDOW", cerrar_proyecto)

@@ -20,8 +20,7 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 mycursor.execute("USE tareatopicos")
-mycursor.execute("SELECT semestre,nombreMat FROM materias;")
-rows = mycursor.fetchall()
+
 
 
 def buscar():
@@ -50,7 +49,6 @@ def on_select(event):
     mycursor.execute("select id from materias where nombreMat='" + materia + "';")
     resultado = mycursor.fetchall()
     for res in resultado:
-        borrarTbl2()
         cargartbl2(res[0])
 
 
@@ -137,9 +135,6 @@ table.heading("#0", text="")
 table.heading("semestre", text="semestre", anchor=tk.CENTER)
 table.heading("materia", text="materia", anchor=tk.CENTER)
 
-# Agregar filas a la tabla
-for row in rows:
-    table.insert("", tk.END, text="", values=row)
 
 # Agrega la tabla al Frame
 table.pack(side=LEFT, padx=5)
@@ -162,7 +157,7 @@ table2.column("Tema", anchor=tk.CENTER, width=125)
 table2.heading("#0", text="")
 table2.heading("id", text="id", anchor=tk.CENTER)
 table2.heading("Unidad", text="Unidad", anchor=tk.CENTER)
-table2.heading("Tema", text="mTema", anchor=tk.CENTER)
+table2.heading("Tema", text="Tema", anchor=tk.CENTER)
 
 
 # Agrega la tabla al Frame
@@ -188,6 +183,14 @@ def actualizarTbl2(rows):
     table2.insert("", tk.END, text="", values=row)
     # Enlazar el evento de selección de una fila
     table2.bind('<<TreeviewSelect>>', on_select2)
+
+def ActualizacionIni():
+    table.delete(*table.get_children())
+    mycursor.execute("SELECT id,unidad,pregunta FROM preguntas ;")
+    rows = mycursor.fetchall()
+    for row in rows:
+        table2.insert("", tk.END, text="", values=row)
+
 
 
 aplicacion.iconify()
